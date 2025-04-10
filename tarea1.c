@@ -1,5 +1,5 @@
-#include "tdas/list.h"
-#include "tdas/extra.h"
+#include "list.h"
+#include "extra.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -33,17 +33,40 @@ void mostrarMenuPrincipal() {
   puts("6) Salir");
 }
 
-void registrar_ticket(List *lista_bajo) {
+int existe_id(List *alto, List *medio, List *bajo, int id){
+  Ticket *actual = list_first(bajo);
+  while(actual != NULL){
+    if(actual->id == id) return 1;
+    actual = list_next(bajo);
+  }
+  actual = list_first(medio);
+  while(actual != NULL){
+    if(actual->id == id) return 1;
+    actual = list_next(medio);
+  }
+  actual = list_first(alto);
+  while(actual != NULL){
+    if(actual->id == id) return 1;
+    actual = list_next(alto);
+  }
+  return 0;
+}
+
+void registrar_ticket(List *alto, List *medio, List *bajo) {
   puts("Registrar nuevo ticket");
   Ticket *nuevo = (Ticket *)malloc(sizeof(Ticket)); //se crea un nuevo Ticket
   printf("Ingrese ID:\n");
   scanf("%d", &nuevo->id); //se ingresa el ID del ticket 
   getchar();
+  if(existe_id(alto, medio, bajo, nuevo->id)){
+    printf("ID ya fue registrado.");
+    return;
+  }
   printf("Ingrese descripción de problema:\n");
   scanf(" %[^\n]", nuevo->descripcion); //se lee la descripción del problema hasta el salto de linea
   getchar();
   nuevo->timestamp = time(NULL); // Hora actual
-  list_pushBack(lista_bajo, nuevo); //se ingresa el ticket a la lista de prioridad baja(1) por defecto
+  list_pushBack(bajo, nuevo); //se ingresa el ticket a la lista de prioridad baja(1) por defecto
 }
 
 void cambiar_prioridad(Ticket *actual, int nueva_prioridad, List *origen, List *destino){
@@ -105,7 +128,7 @@ void mostrar_lista_tickets(List *alto, List *medio, List *bajo) {
   printf("tickets en espera: \n");
   Ticket *actual = list_first(alto);
   if (actual != NULL){
-    printf("\n\nPrioridad alta:\n");
+    printf("\nPrioridad alta:\n");
     while(actual != NULL){
       printf("ID: %d. ", actual->id);
       printf("\n");
@@ -115,7 +138,7 @@ void mostrar_lista_tickets(List *alto, List *medio, List *bajo) {
   }
   actual = list_first(medio);
   if (actual != NULL){
-    printf("\n\nPrioridad media:\n");
+    printf("\nPrioridad media:\n");
     while(actual != NULL){
       printf("ID: %d. ", actual->id);
       printf("\n");
@@ -125,7 +148,7 @@ void mostrar_lista_tickets(List *alto, List *medio, List *bajo) {
   }
   actual = list_first(bajo);
   if (actual != NULL){
-    printf("\n\nPrioridad baja:\n");
+    printf("\nPrioridad baja:\n");
     while(actual != NULL){
       printf("ID: %d. ", actual->id);
       printf("\n");
@@ -139,6 +162,7 @@ void procesar_siguiente(List *alto, List *medio, List *bajo){
   if(actual != NULL){
     list_popFront(alto);
     printf("\nAtendiendo ticket de prioridad alta:\n");
+  
   }
   else if((actual = list_first(medio)) != NULL){
     list_popFront(medio);
@@ -152,14 +176,10 @@ void procesar_siguiente(List *alto, List *medio, List *bajo){
     printf("No quedan tickets por atender.\n");
     return;
   }
-
-  struct tm *tm_info = localtime(actual->timestamp);
-  int hora = tm_info->tm_hour;
-  int min = tm_info->tm_min;
   
   printf("ID: %d\n", actual->id);
   printf("Descripción problema: %s\n", actual->descripcion);
-  printf("Hora registro: %02d:%02d\n\n", hora, min);
+  printf("Hora registro: %s\n\n", ctime(&actual->timestamp));
   free(actual);
 }
 
@@ -177,7 +197,7 @@ void buscar_ticket(List *alto, List *medio, List *bajo){
       printf("ID: %d\n", actual->id);
       printf("Descripción problema: %s\n", actual->descripcion);
       printf("Prioridad ALTA\n");
-      printf("Hora registro: %02d:%02d\n\n", hora, min);
+      printf("Hora registro: %s\n\n", ctime(&actual->timestamp));
       return;
     }
     actual = list_next(alto);
@@ -185,13 +205,10 @@ void buscar_ticket(List *alto, List *medio, List *bajo){
   actual = list_first(medio);
   while(actual != NULL){
     if(actual->id == id){
-      struct tm *tm_info = localtime(actual->timestamp);
-      int hora = tm_info->tm_hour;
-      int min = tm_info->tm_min;
       printf("ID: %d\n", actual->id);
       printf("Descripción problema: %s\n", actual->descripcion);
       printf("Prioridad MEDIA\n");
-      printf("Hora registro: %02d:%02d\n\n", hora, min);
+      printf("Hora registro: %s\n\n", ctime(&actual->timestamp));
       return;
     }
     actual = list_next(medio);
@@ -199,13 +216,10 @@ void buscar_ticket(List *alto, List *medio, List *bajo){
   actual = list_first(bajo);
   while(actual != NULL){
     if(actual->id == id){
-      struct tm *tm_info = localtime(actual->timestamp);
-      int hora = tm_info->tm_hour;
-      int min = tm_info->tm_min;
       printf("ID: %d\n", actual->id);
       printf("Descripción problema: %s\n", actual->descripcion);
       printf("Prioridad BAJA\n");
-      printf("Hora registro: %02d:%02d\n\n", hora, min);
+      printf("Hora registro: %s\n\n", ctime(&actual->timestamp));
       return;
     }
     actual = list_next(bajo);
@@ -227,7 +241,7 @@ int main() {
 
     switch (opcion) {
     case '1':
-      registrar_ticket(lista_bajo);
+      registrar_ticket(lista_alto, lista_medio, lista_bajo);
       break;
     case '2':
       asignar_prioridad(lista_alto, lista_medio, lista_bajo);
