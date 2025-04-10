@@ -215,36 +215,36 @@ void buscar_ticket(List *alto, List *medio, List *bajo){
 
 int main() {
   char opcion;
-  List *pac_bajo = list_create(); // lista donde se almacenan todos los tickets al inicio
-  List *pac_medio = list_create(); //lista de tickets con nivel de urgencia medio
-  List *pac_alto = list_create();  //lista de tickets con nivel de urgencia alto
+  List *lista_bajo = list_create(); // lista donde se almacenan todos los tickets al inicio
+  List *lista_medio = list_create(); //lista de tickets con nivel de urgencia medio
+  List *lista_alto = list_create();  //lista de tickets con nivel de urgencia alto
 
   do {
     mostrarMenuPrincipal();
     printf("Ingrese su opción: ");
-    scanf(" %c", &opcion); // Nota el espacio antes de %c para consumir el
+    scanf(" %c", &opcion); // Nota el eslistaio antes de %c para consumir el
                            // newline anterior
 
     switch (opcion) {
     case '1':
-      registrar_ticket(pac_bajo);
+      registrar_ticket(lista_bajo);
       break;
     case '2':
-      asignar_prioridad(pac_alto, pac_medio, pac_bajo);
+      asignar_prioridad(lista_alto, lista_medio, lista_bajo);
       break;
     case '3':
-      mostrar_lista_tickets(pac_alto, pac_medio, pac_bajo);
+      mostrar_lista_tickets(lista_alto, lista_medio, lista_bajo);
       break;
     case '4':
       // Lógica para atender al siguiente ticket
-      printf("xxx");
+      procesar_siguiente(lista_alto, lista_medio, lista_bajo);
       break;
     case '5':
-      // Lógica para mostrar tickets por prioridad
-      printf("xxx");
+      // Lógica para buscar ticket por ID
+      buscar_ticket(lista_alto, lista_medio, lista_bajo);
       break;
     case '6':
-      puts("Saliendo del sistema de gestión hospitalaria...");
+      puts("Saliendo del sistema de gestión de tickets...");
       break;
     default:
       puts("Opción no válida. Por favor, intente de nuevo.");
@@ -254,9 +254,9 @@ int main() {
   } while (opcion != '6');
 
   // Liberar recursos, si es necesario
-  list_clean(pac_alto);
-  list_clean(pac_medio);
-  list_clean(pac_bajo);
+  list_clean(lista_alto);
+  list_clean(lista_medio);
+  list_clean(lista_bajo);
 
   return 0;
 }
