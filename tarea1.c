@@ -163,6 +163,56 @@ void procesar_siguiente(List *alto, List *medio, List *bajo){
   free(actual);
 }
 
+void buscar_ticket(List *alto, List *medio, List *bajo){
+  int id;
+  printf("Ingrese ID de ticket deseado:\n");
+  scanf("%d", &id);
+
+  Ticket *actual = list_first(alto);
+  while(actual != NULL){
+    if(actual->id == id){
+      struct tm *tm_info = localtime(actual->timestamp);
+      int hora = tm_info->tm_hour;
+      int min = tm_info->tm_min;
+      printf("ID: %d\n", actual->id);
+      printf("Descripción problema: %s\n", actual->descripcion);
+      printf("Prioridad ALTA\n");
+      printf("Hora registro: %02d:%02d\n\n", hora, min);
+      return;
+    }
+    actual = list_next(alto);
+  }
+  actual = list_first(medio);
+  while(actual != NULL){
+    if(actual->id == id){
+      struct tm *tm_info = localtime(actual->timestamp);
+      int hora = tm_info->tm_hour;
+      int min = tm_info->tm_min;
+      printf("ID: %d\n", actual->id);
+      printf("Descripción problema: %s\n", actual->descripcion);
+      printf("Prioridad MEDIA\n");
+      printf("Hora registro: %02d:%02d\n\n", hora, min);
+      return;
+    }
+    actual = list_next(medio);
+  }
+  actual = list_first(bajo);
+  while(actual != NULL){
+    if(actual->id == id){
+      struct tm *tm_info = localtime(actual->timestamp);
+      int hora = tm_info->tm_hour;
+      int min = tm_info->tm_min;
+      printf("ID: %d\n", actual->id);
+      printf("Descripción problema: %s\n", actual->descripcion);
+      printf("Prioridad BAJA\n");
+      printf("Hora registro: %02d:%02d\n\n", hora, min);
+      return;
+    }
+    actual = list_next(bajo);
+  }
+  printf("ID ingresado no está entre los tickets en lista de espera.\n");
+}
+
 int main() {
   char opcion;
   List *pac_bajo = list_create(); // lista donde se almacenan todos los tickets al inicio
