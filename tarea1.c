@@ -63,7 +63,7 @@ void registrar_ticket(List *alto, List *medio, List *bajo) {
     return;
   }
   printf("Ingrese descripción de problema:\n");
-  scanf(" %[^\n]", nuevo->descripcion); //se lee la descripción del problema hasta el salto de linea
+  scanf(" %99[^\n]", nuevo->descripcion); //se lee la descripción del problema hasta el salto de linea
   getchar();
   nuevo->timestamp = time(NULL); // Hora actual
   list_pushBack(bajo, nuevo); //se ingresa el ticket a la lista de prioridad baja(1) por defecto
@@ -72,8 +72,8 @@ void registrar_ticket(List *alto, List *medio, List *bajo) {
 void cambiar_prioridad(Ticket *actual, int nueva_prioridad, List *origen, List *destino){
   actual->prioridad = nueva_prioridad;
   actual->timestamp = time(NULL);
-  list_pushBack(destino, actual);
   list_popCurrent(origen);
+  list_pushBack(destino, actual);
   printf("Prioridad reasignada correctamente.\n");
 }
 
@@ -87,7 +87,10 @@ void asignar_prioridad(List *alto, List *medio, List *bajo){
     if(actual->id == id){
       printf("Ingrese nueva prioridad:\n");
       scanf("%d", &nueva_prioridad); //se ingresa la nueva prioridad que se le quiere asignar al ticket (1(Baja), 2(Media), 3(Alta))
-      if (nueva_prioridad < 2 || nueva_prioridad > 3) printf("Número ingresado no válido o prioridad nueva igual a la actual.\n");
+      if (nueva_prioridad < 2 || nueva_prioridad > 3){
+        printf("Número ingresado no válido o prioridad nueva igual a la actual.\n");
+        return;
+      }
       if(nueva_prioridad == 2) cambiar_prioridad(actual, nueva_prioridad, bajo, medio);
       else cambiar_prioridad(actual, nueva_prioridad, bajo, alto);
       return;
@@ -101,7 +104,10 @@ void asignar_prioridad(List *alto, List *medio, List *bajo){
     if(actual->id == id){
       printf("Ingrese nueva prioridad:\n");
       scanf("%d", &nueva_prioridad); //se ingresa la nueva prioridad que se le quiere asignar al ticket (1(Baja), 2(Media), 3(Alta))
-      if (nueva_prioridad < 1 || nueva_prioridad > 3 || nueva_prioridad == 2) printf("Número ingresado no válido o prioridad nueva igual a la actual.\n");
+      if (nueva_prioridad < 1 || nueva_prioridad > 3 || nueva_prioridad == 2){
+        printf("Número ingresado no válido o prioridad nueva igual a la actual.\n");
+        return;
+      }
       if(nueva_prioridad == 1) cambiar_prioridad(actual, nueva_prioridad, medio, bajo);
       else cambiar_prioridad(actual, nueva_prioridad, medio, alto);
       return;
@@ -113,7 +119,10 @@ void asignar_prioridad(List *alto, List *medio, List *bajo){
     if(actual->id == id){
       printf("Ingrese nueva prioridad:\n");
       scanf("%d", &nueva_prioridad); //se ingresa la nueva prioridad que se le quiere asignar al ticket (1(Baja), 2(Media), 3(Alta))
-      if (nueva_prioridad < 1 || nueva_prioridad > 2) printf("Número ingresado no válido o prioridad nueva igual a la actual.\n");
+      if (nueva_prioridad < 1 || nueva_prioridad > 2){
+        printf("Número ingresado no válido o prioridad nueva igual a la actual.\n");
+        return;
+      }
       if(nueva_prioridad == 2) cambiar_prioridad(actual, nueva_prioridad, alto, medio);
       else cambiar_prioridad(actual, nueva_prioridad, alto, bajo);
       return;
@@ -188,12 +197,10 @@ void buscar_ticket(List *alto, List *medio, List *bajo){
   printf("Ingrese ID de ticket deseado:\n");
   scanf("%d", &id);
 
-  Ticket *actual = list_first(alto);
+  Ticket *actual = NULL;
+  actual = list_first(alto);
   while(actual != NULL){
     if(actual->id == id){
-      struct tm *tm_info = localtime(actual->timestamp);
-      int hora = tm_info->tm_hour;
-      int min = tm_info->tm_min;
       printf("ID: %d\n", actual->id);
       printf("Descripción problema: %s\n", actual->descripcion);
       printf("Prioridad ALTA\n");
