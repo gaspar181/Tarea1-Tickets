@@ -25,15 +25,15 @@ Este sistema ha sido desarrollado en lenguaje C y puede ejecutarse fácilmente u
     - Abre la terminal integrada (`Terminal > Nueva terminal`).
     - En la terminal, compila el programa con el siguiente comando (ajusta el nombre si el archivo principal tiene otro nombre):
         
-        ```bash
-        gcc *.c -o tarea1
+        ```powershell
+        gcc extra.c list.c tarea1.c -Wno-unused-result -o tarea1
         ```
         
 4. **Ejecuta el programa**
     - Una vez compilado, puedes ejecutar la aplicación con:
         
         ```
-        ./tarea1.exe
+        ./tarea1
         ```
         
 
