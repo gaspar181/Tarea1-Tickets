@@ -30,7 +30,7 @@ Este sistema ha sido desarrollado en lenguaje C y puede ejecutarse fácilmente u
         ```
         
 4. **Ejecuta el programa**
-    - Una vez compilado, puedes ejecutar la aplicación con:
+    - Una vez compilado, puedes ejecutar la aplicación con la flecha al lado del + de "New Terminal", presionando "Git Bash" y con:
         
         ```bash
         ./tarea1
