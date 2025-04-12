@@ -6,14 +6,14 @@
 
 
 typedef struct{
-  int id;
-  char descripcion[100];
+  int id; // Numero para identificar ticket
+  char descripcion[100]; //descripción breve del problema
   int prioridad; //1 = Baja, 2 = Media, 3 = Alta
-  time_t timestamp;
+  time_t timestamp; //Acá se almacenará la fecha y hora de registro del ticket
 } Ticket;
 
 typedef struct Node {
-  Ticket *data;
+  Ticket *data; //cada nodo almacenado en cada lista que utilice el programa, tendra un dato tipo ticket y un puntero que apunte al siguiente nodo
   struct Node *next;
 } Node;
 
@@ -33,7 +33,7 @@ void mostrarMenuPrincipal() {
   puts("6) Salir");
 }
 
-int existe_id(List *alto, List *medio, List *bajo, int id){
+int existe_id(List *alto, List *medio, List *bajo, int id){ //función verifica si al crear un nuevo ticket, el id ingresado ya se encuentra registrado, para que no se concrete la funcion registrar_ticket
   Ticket *actual = list_first(bajo);
   while(actual != NULL){
     if(actual->id == id) return 1;
@@ -52,7 +52,7 @@ int existe_id(List *alto, List *medio, List *bajo, int id){
   return 0;
 }
 
-void registrar_ticket(List *alto, List *medio, List *bajo) {
+void registrar_ticket(List *alto, List *medio, List *bajo) { //funcion registra los tickets nuevos, solicitando al usuario id y descripcion del problema. El ticket se almacena automaticamente como ticket de prioridad baja.
   puts("Registrar nuevo ticket");
   Ticket *nuevo = (Ticket *)malloc(sizeof(Ticket)); //se crea un nuevo Ticket
   printf("Ingrese ID:\n");
@@ -69,7 +69,7 @@ void registrar_ticket(List *alto, List *medio, List *bajo) {
   list_pushBack(bajo, nuevo); //se ingresa el ticket a la lista de prioridad baja(1) por defecto
 }
 
-void cambiar_prioridad(Ticket *actual, int nueva_prioridad, List *origen, List *destino){
+void cambiar_prioridad(Ticket *actual, int nueva_prioridad, List *origen, List *destino){ //si el id y prioridad ingresados en la funcion asignar_prioridad, esta funcion mueve el ticket a la lista de la nueva prioridad y lo elimina de su lista actual
   actual->prioridad = nueva_prioridad;
   actual->timestamp = time(NULL);
   list_popCurrent(origen);
@@ -77,7 +77,7 @@ void cambiar_prioridad(Ticket *actual, int nueva_prioridad, List *origen, List *
   printf("Prioridad reasignada correctamente.\n");
 }
 
-void asignar_prioridad(List *alto, List *medio, List *bajo){
+void asignar_prioridad(List *alto, List *medio, List *bajo){ //al utilizar esta funcion se debe ingresar un id, el cual se busca en las listas de las 3 prioridades. Si el ticket se encuentra, hay que ingresar una nueva prioridad. Si la prioridad ingresada es un numero valido y distinto a la prioridad actual, se efectua la funcion cambiar_prioridad.
   int nueva_prioridad;
   int id;
   printf("Ingrese ID de ticket para asignar prioridad:\n");
@@ -132,7 +132,7 @@ void asignar_prioridad(List *alto, List *medio, List *bajo){
   printf("Ticket de ID %d no encontrado en la lista de tickets.\n", id);
 }
 
-void mostrar_lista_tickets(List *alto, List *medio, List *bajo) {
+void mostrar_lista_tickets(List *alto, List *medio, List *bajo) { //la funcion muestra los id de los tickets no atendidos ordenados por sus respectivas prioridades y orden de ingreso
   // Mostrar tickets en la cola de espera
   printf("tickets en espera: \n");
   Ticket *actual = list_first(alto);
@@ -166,7 +166,7 @@ void mostrar_lista_tickets(List *alto, List *medio, List *bajo) {
   }
 }
 
-void procesar_siguiente(List *alto, List *medio, List *bajo){
+void procesar_siguiente(List *alto, List *medio, List *bajo){ //la función muestra los datos del ticket con mayor prioridad en la lista de tickets y lo borra liberando su memoria.
   Ticket *actual = list_first(alto);
   if(actual != NULL){
     list_popFront(alto);
@@ -192,7 +192,7 @@ void procesar_siguiente(List *alto, List *medio, List *bajo){
   free(actual);
 }
 
-void buscar_ticket(List *alto, List *medio, List *bajo){
+void buscar_ticket(List *alto, List *medio, List *bajo){ //la función se utiliza ingresando un id. Si el id ingresado existe entre los tickets pendientes, se muestran sus datos. De lo contrario se indica que el ticket con ese id no existe.
   int id;
   printf("Ingrese ID de ticket deseado:\n");
   scanf("%d", &id);
@@ -236,9 +236,9 @@ void buscar_ticket(List *alto, List *medio, List *bajo){
 
 int main() {
   char opcion;
-  List *lista_bajo = list_create(); // lista donde se almacenan todos los tickets al inicio
-  List *lista_medio = list_create(); //lista de tickets con nivel de urgencia medio
-  List *lista_alto = list_create();  //lista de tickets con nivel de urgencia alto
+  List *lista_bajo = list_create(); // lista donde se almacenan todos los tickets al inicio y los que se les cambie la prioridad a baja (1)
+  List *lista_medio = list_create(); //lista de tickets con nivel de urgencia medio (2)
+  List *lista_alto = list_create();  //lista de tickets con nivel de urgencia alto (3)
 
   do {
     mostrarMenuPrincipal();
