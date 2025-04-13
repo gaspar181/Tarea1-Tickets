@@ -48,12 +48,14 @@ Este sistema ha sido desarrollado en lenguaje C y puede ejecutarse fácilmente u
 
 ### Problemas conocidos:
 
-- Al registrar un ticket, el id debe ser un numero entero, sino se registrara pero no podra utilizarse con las demas funciones.
+- Al registrar un ticket, el id debe ser un numero entero, sino se registrará el ticket pero no podra utilizarse con las demas funciones.
+- Si la descripción del problema se redacta en más de 100 caracteres, el programa se va a trabar un poco y la descripción se cortará hasta los primeros 100 caracteres.
 
 ### A mejorar:
 
 - Implementar una interfaz de usuario más amigable.
-- Permitir la edición de los datos de los pacientes.
+- Permitir cambiar la descripción de un ticket.
+- Que los ID se asignen de manera automática para optimizar el registro y busqueda de los tickets.
 
 ## Ejemplo de uso
 
